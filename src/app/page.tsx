@@ -9,6 +9,12 @@ import {
   BookOpen, Download, ShoppingBag
 } from 'lucide-react';
 
+// Helper function to safely parse numbers
+const parseNum = (value: string, fallback: number): number => {
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? fallback : parsed;
+};
+
 // ==================== TRADING CALCULATORS ====================
 
 // Pivot Point Calculator
@@ -31,11 +37,14 @@ function PivotCalculator() {
         <Layers size={18} /> Pivot Points
       </h4>
       <div className="grid grid-cols-3 gap-2 mb-3">
-        <input type="number" step="0.0001" value={high} onChange={(e) => setHigh(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={high} 
+          onChange={(e) => setHigh(parseNum(e.target.value, high))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="High" />
-        <input type="number" step="0.0001" value={low} onChange={(e) => setLow(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={low} 
+          onChange={(e) => setLow(parseNum(e.target.value, low))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Low" />
-        <input type="number" step="0.0001" value={close} onChange={(e) => setClose(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={close} 
+          onChange={(e) => setClose(parseNum(e.target.value, close))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Close" />
       </div>
       <div className="space-y-1 text-xs">
@@ -74,9 +83,11 @@ function FibonacciCalculator() {
         <LineChart size={18} /> Fibonacci Retracement
       </h4>
       <div className="flex gap-2 mb-3">
-        <input type="number" step="0.0001" value={high} onChange={(e) => setHigh(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={high} 
+          onChange={(e) => setHigh(parseNum(e.target.value, high))}
           className="flex-1 p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="High" />
-        <input type="number" step="0.0001" value={low} onChange={(e) => setLow(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={low} 
+          onChange={(e) => setLow(parseNum(e.target.value, low))}
           className="flex-1 p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Low" />
       </div>
       <div className="flex gap-2 mb-3">
@@ -110,7 +121,7 @@ function PositionSizeCalculator() {
 
   const riskAmount = balance * (risk / 100);
   const pipDiff = Math.abs(entry - stopLoss) * 10000;
-  const lotSize = riskAmount / (pipDiff * 10);
+  const lotSize = pipDiff > 0 ? riskAmount / (pipDiff * 10) : 0;
 
   return (
     <div className="bg-[#12121a] rounded-xl p-4 border border-white/10">
@@ -118,13 +129,17 @@ function PositionSizeCalculator() {
         <Calculator size={18} /> Position Size
       </h4>
       <div className="grid grid-cols-2 gap-2 mb-3">
-        <input type="number" value={balance} onChange={(e) => setBalance(parseFloat(e.target.value))}
+        <input type="number" value={balance} 
+          onChange={(e) => setBalance(parseNum(e.target.value, balance))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Balance" />
-        <input type="number" value={risk} onChange={(e) => setRisk(parseFloat(e.target.value))}
+        <input type="number" value={risk} 
+          onChange={(e) => setRisk(parseNum(e.target.value, risk))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Risk %" />
-        <input type="number" step="0.0001" value={entry} onChange={(e) => setEntry(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={entry} 
+          onChange={(e) => setEntry(parseNum(e.target.value, entry))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Entry" />
-        <input type="number" step="0.0001" value={stopLoss} onChange={(e) => setStopLoss(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={stopLoss} 
+          onChange={(e) => setStopLoss(parseNum(e.target.value, stopLoss))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Stop Loss" />
       </div>
       <div className="grid grid-cols-3 gap-2 text-center">
@@ -153,7 +168,7 @@ function RiskRewardCalculator() {
 
   const risk = Math.abs(entry - stopLoss) * 10000;
   const reward = Math.abs(takeProfit - entry) * 10000;
-  const ratio = reward / risk;
+  const ratio = risk > 0 ? reward / risk : 0;
 
   return (
     <div className="bg-[#12121a] rounded-xl p-4 border border-white/10">
@@ -161,11 +176,14 @@ function RiskRewardCalculator() {
         <Target size={18} /> Risk/Reward
       </h4>
       <div className="grid grid-cols-3 gap-2 mb-3">
-        <input type="number" step="0.0001" value={entry} onChange={(e) => setEntry(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={entry} 
+          onChange={(e) => setEntry(parseNum(e.target.value, entry))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Entry" />
-        <input type="number" step="0.0001" value={stopLoss} onChange={(e) => setStopLoss(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={stopLoss} 
+          onChange={(e) => setStopLoss(parseNum(e.target.value, stopLoss))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="SL" />
-        <input type="number" step="0.0001" value={takeProfit} onChange={(e) => setTakeProfit(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={takeProfit} 
+          onChange={(e) => setTakeProfit(parseNum(e.target.value, takeProfit))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="TP" />
       </div>
       <div className="grid grid-cols-3 gap-2 text-center">
@@ -193,8 +211,8 @@ function MarginCalculator() {
   const [lotSize, setLotSize] = useState(1);
   const [price, setPrice] = useState(1.0900);
 
-  const margin = (lotSize * 100000 * price) / leverage;
-  const marginPercent = (margin / balance) * 100;
+  const margin = leverage > 0 ? (lotSize * 100000 * price) / leverage : 0;
+  const marginPercent = balance > 0 ? (margin / balance) * 100 : 0;
 
   return (
     <div className="bg-[#12121a] rounded-xl p-4 border border-white/10">
@@ -202,13 +220,17 @@ function MarginCalculator() {
         <PieChart size={18} /> Margin Calculator
       </h4>
       <div className="grid grid-cols-2 gap-2 mb-3">
-        <input type="number" value={balance} onChange={(e) => setBalance(parseFloat(e.target.value))}
+        <input type="number" value={balance} 
+          onChange={(e) => setBalance(parseNum(e.target.value, balance))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Balance" />
-        <input type="number" value={leverage} onChange={(e) => setLeverage(parseFloat(e.target.value))}
+        <input type="number" value={leverage} 
+          onChange={(e) => setLeverage(parseNum(e.target.value, leverage))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Leverage" />
-        <input type="number" step="0.01" value={lotSize} onChange={(e) => setLotSize(parseFloat(e.target.value))}
+        <input type="number" step="0.01" value={lotSize} 
+          onChange={(e) => setLotSize(parseNum(e.target.value, lotSize))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Lots" />
-        <input type="number" step="0.0001" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={price} 
+          onChange={(e) => setPrice(parseNum(e.target.value, price))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Price" />
       </div>
       <div className="grid grid-cols-2 gap-2 text-center">
@@ -251,11 +273,14 @@ function ProfitCalculator() {
         </button>
       </div>
       <div className="grid grid-cols-3 gap-2 mb-3">
-        <input type="number" step="0.0001" value={entry} onChange={(e) => setEntry(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={entry} 
+          onChange={(e) => setEntry(parseNum(e.target.value, entry))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Entry" />
-        <input type="number" step="0.0001" value={exit} onChange={(e) => setExit(parseFloat(e.target.value))}
+        <input type="number" step="0.0001" value={exit} 
+          onChange={(e) => setExit(parseNum(e.target.value, exit))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Exit" />
-        <input type="number" step="0.01" value={lots} onChange={(e) => setLots(parseFloat(e.target.value))}
+        <input type="number" step="0.01" value={lots} 
+          onChange={(e) => setLots(parseNum(e.target.value, lots))}
           className="p-2 rounded bg-white/5 border border-white/10 text-sm" placeholder="Lots" />
       </div>
       <div className="grid grid-cols-2 gap-2 text-center">
