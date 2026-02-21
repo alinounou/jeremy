@@ -1,141 +1,243 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# 🚀 Elite AI Trading Platform
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+Ultra-professional institutional AI trading web platform with real-time market data, quantitative calculators, predictive AI signals, and Bloomberg Terminal / TradingView Pro-style interface.
 
-## ✨ Technology Stack
+![Elite AI Trading Platform](https://img.shields.io/badge/Platform-Elite%20AI%20Trading-blue)
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-This scaffold provides a robust foundation built with:
+## ✨ Features
 
-### 🎯 Core Framework
-- **⚡ Next.js 16** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+### 📊 Real-Time Market Data
+- **Multi-Asset Coverage**: Forex, Metals (Gold/Silver), Crypto, Indices, Stocks
+- **Live Price Streaming**: Real-time tick-by-tick updates with simulated market data
+- **Historical Data**: Rolling candle buffer with multiple timeframes
+- **Market Watch**: Comprehensive ticker display with price changes and mini sparklines
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+### 🧮 Advanced Quantitative Calculators
+- **Position Sizing Calculator**: Fixed %, ATR-based, Volatility-adjusted, Kelly Criterion
+- **Risk/Reward Optimizer**: Calculate optimal SL/TP levels
+- **VaR Calculator**: Value at Risk (Parametric, Historical, Monte Carlo)
+- **Break-Even Calculator**: Including spread, slippage, and fees
+- **Monte Carlo Simulator**: Trade sequence simulation with probability analysis
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### 🤖 AI Market Intelligence
+- **Multi-Layer Analysis**:
+  - Structural Layer: Market structure, BOS, liquidity zones, supply/demand clusters
+  - Statistical Layer: Volatility clustering, momentum scoring, mean reversion
+  - Predictive Layer: Breakout & reversal probability, regime shift detection
+- **BUY/SELL/WAIT Signals**: With confidence scores and probability metrics
+- **Explainable AI**: Full reasoning for each signal generated
+- **Entry/SL/TP Recommendations**: AI-calculated optimal levels
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Fetch** - Promise-based HTTP request
+### 📈 Professional Trading Terminal UI
+- **Dark/Light Mode**: Professional theme toggle
+- **Advanced Chart**: Real-time price chart with Bollinger Bands and moving averages
+- **Signal Center**: AI signal display with confidence bars and reasoning
+- **Market Heatmap**: Color-coded volatility and momentum visualization
+- **Sentiment Gauge**: Bullish/Bearish sentiment meter
+- **Portfolio Dashboard**: P/L summary, positions, and risk metrics
+- **Responsive Design**: Desktop, tablet, and mobile support
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+## 🛠️ Technology Stack
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
-
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
-
-## 🎯 Why This Scaffold?
-
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-bun install
-
-# Start development server
-bun run dev
-
-# Build for production
-bun run build
-
-# Start production server
-bun start
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
-
-## 🤖 Powered by Z.ai
-
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
-
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
-
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript 5.0
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **UI Components**: shadcn/ui
+- **AI Engine**: Custom-built quantitative analysis library
 
 ## 📁 Project Structure
 
 ```
 src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+├── app/
+│   ├── api/
+│   │   ├── market/
+│   │   │   ├── quote/route.ts      # Real-time quotes API
+│   │   │   └── history/route.ts    # Historical data API
+│   │   └── ai/
+│   │       └── signal/route.ts     # AI signal generation API
+│   ├── globals.css                  # Global styles
+│   ├── layout.tsx                   # Root layout
+│   └── page.tsx                     # Main trading terminal
+├── components/
+│   └── ui/                          # shadcn/ui components
+├── hooks/
+│   └── use-market-data.ts           # Custom hooks for data management
+├── lib/
+│   ├── ai-engine.ts                 # AI analysis and signal generation
+│   ├── quant.ts                     # Quantitative calculations
+│   └── technical-analysis.ts        # Technical indicators
+└── types/
+    └── trading.ts                   # TypeScript type definitions
 ```
 
-## 🎨 Available Features & Components
+## 🚀 Getting Started
 
-This scaffold includes a comprehensive set of modern web development tools:
+### Prerequisites
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+- Node.js 18+
+- npm or bun
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+### Installation
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+```bash
+# Clone the repository
+git clone https://github.com/your-username/elite-ai-trading.git
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Fetch + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+# Navigate to project directory
+cd elite-ai-trading
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+# Install dependencies
+bun install
 
-## 🤝 Get Started with Z.ai
+# Create environment file
+cp .env.example .env.local
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+# Start development server
+bun run dev
+```
+
+### Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+PRIME_API_KEY=your_prime_api_key
+GITHUB_TOKEN=your_github_token
+```
+
+## 📊 Quantitative Analysis Library
+
+### Position Sizing
+
+```typescript
+import { calculatePositionSize } from '@/lib/quant';
+
+const result = calculatePositionSize({
+  accountBalance: 10000,
+  riskPercent: 2,
+  entryPrice: 1.0850,
+  stopLoss: 1.0800,
+  instrumentType: 'forex',
+});
+// Returns: positionSize, lots, riskAmount, pipDistance
+```
+
+### Value at Risk (VaR)
+
+```typescript
+import { calculateVaR } from '@/lib/quant';
+
+const var = calculateVaR({
+  portfolioValue: 100000,
+  confidenceLevel: 0.95,
+  timeHorizon: 1,
+  volatility: 0.15,
+});
+// Returns: varParametric, varHistorical, varMonteCarlo, expectedShortfall
+```
+
+### Kelly Criterion
+
+```typescript
+import { calculateKellyCriterion } from '@/lib/quant';
+
+const kelly = calculateKellyCriterion({
+  winProbability: 0.55,
+  winLossRatio: 1.5,
+});
+// Returns optimal position size percentage
+```
+
+## 🤖 AI Signal Generation
+
+The AI engine provides comprehensive market analysis:
+
+```typescript
+import { performAIAnalysis } from '@/lib/ai-engine';
+
+const analysis = performAIAnalysis(symbol, candles, timeframe);
+// Returns: market structure, indicators, sentiment, and trading signal
+```
+
+### Signal Output
+
+```typescript
+interface Signal {
+  symbol: string;
+  type: 'BUY' | 'SELL' | 'WAIT';
+  confidence: number;      // 0-100
+  probability: number;     // 0-100
+  entry?: number;
+  stopLoss?: number;
+  takeProfit?: number;
+  riskReward?: number;
+  reasoning: string[];
+}
+```
+
+## 📈 Technical Indicators
+
+Built-in technical analysis library includes:
+
+- Moving Averages (SMA, EMA, WMA)
+- RSI (Relative Strength Index)
+- MACD (Moving Average Convergence Divergence)
+- Bollinger Bands
+- ADX (Average Directional Index)
+- Stochastic Oscillator
+- Support & Resistance Detection
+- Trend Detection
+- Candlestick Pattern Recognition
+
+## 🎨 Customization
+
+### Theme Colors
+
+Modify the color scheme in `src/app/page.tsx`:
+
+```typescript
+const colors = {
+  dark: {
+    bg: '#0a0a0f',
+    card: '#111118',
+    border: '#1e1e2e',
+    accent: {
+      buy: '#00c853',
+      sell: '#ff1744',
+      blue: '#2979ff',
+    },
+  },
+  // ... light theme
+};
+```
+
+### Adding New Assets
+
+Add new trading instruments in `src/types/trading.ts`:
+
+```typescript
+export const FOREX_PAIRS = [
+  { symbol: 'EURUSD', name: 'EUR/USD', pipValue: 0.0001 },
+  // Add more pairs...
+];
+```
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with Next.js and React
+- UI components from shadcn/ui
+- Charts powered by Recharts
+- Inspired by Bloomberg Terminal and TradingView Pro
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+**Built with ❤️ for professional traders and quantitative analysts**
