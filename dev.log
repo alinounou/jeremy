@@ -26,3 +26,11 @@ https://nextjs.org/telemetry
  POST /invoke 404 in 423ms (compile: 335ms, render: 88ms)
  POST /invoke 404 in 41ms (compile: 4ms, render: 36ms)
 ✓ Compiled in 108ms
+ GET / 200 in 620ms (compile: 412ms, render: 208ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 313ms (compile: 280ms, render: 33ms)
+⚠ Cross origin request detected from preview-chat-cc19619a-7b0f-4488-ab73-446c8fcebac1.space.z.ai to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 23ms (compile: 2ms, render: 21ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 17ms (compile: 4ms, render: 14ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 10ms (compile: 2ms, render: 8ms)
+ GET / 200 in 55ms (compile: 2ms, render: 53ms)
