@@ -34,3 +34,28 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 17ms (compile: 4ms, render: 14ms)
  GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 10ms (compile: 2ms, render: 8ms)
  GET / 200 in 55ms (compile: 2ms, render: 53ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 10ms (compile: 2ms, render: 8ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 9ms (compile: 1921µs, render: 7ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 11ms (compile: 1938µs, render: 9ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 9ms (compile: 3ms, render: 6ms)
+ GET / 200 in 58ms (compile: 1945µs, render: 56ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 14ms (compile: 2ms, render: 12ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 9ms (compile: 1644µs, render: 8ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 9ms (compile: 2ms, render: 7ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 7ms (compile: 1728µs, render: 6ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 8ms (compile: 1805µs, render: 6ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 10ms (compile: 3ms, render: 7ms)
+ GET / 200 in 43ms (compile: 2ms, render: 41ms)
+✓ Compiled in 236ms
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 10ms (compile: 1858µs, render: 8ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 8ms (compile: 1434µs, render: 7ms)
+✓ Compiled in 128ms
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 8ms (compile: 1649µs, render: 6ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 7ms (compile: 2ms, render: 5ms)
+✓ Compiled in 139ms
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 7ms (compile: 1850µs, render: 5ms)
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 8ms (compile: 2ms, render: 6ms)
+✓ Compiled in 126ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /api/ai/signal?symbol=EURUSD&timeframe=1h 200 in 14ms (compile: 2ms, render: 11ms)
+ GET / 200 in 256ms (compile: 47ms, render: 209ms)

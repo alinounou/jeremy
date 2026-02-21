@@ -53,11 +53,20 @@ const colors = {
 
 // ==================== HEADER COMPONENT ====================
 function Header({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleTheme: () => void }) {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState<string>('');
   const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    // Update time immediately and then every second
+    const updateTime = () => {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      setCurrentTime(`${dateStr} ${timeStr}`);
+    };
+    
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -91,8 +100,7 @@ function Header({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleTheme: 
 
       <div className="flex items-center gap-6">
         <div className="text-sm" style={{ color: themeColors.textSecondary }}>
-          {currentTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} {' '}
-          {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          {currentTime || '--:--:--'}
         </div>
         
         <div className="flex items-center gap-2">
