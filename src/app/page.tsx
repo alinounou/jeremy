@@ -330,6 +330,11 @@ function AISignalCard({ theme, symbol }: { theme: 'dark' | 'light'; symbol: stri
   );
 }
 
+// Helper function to format numbers consistently
+function formatNumber(num: number): string {
+  return num.toLocaleString('en-US');
+}
+
 // ==================== PORTFOLIO CARD ====================
 function PortfolioCard({ theme }: { theme: 'dark' | 'light' }) {
   const { portfolio, positions } = usePortfolio();
@@ -362,21 +367,25 @@ function PortfolioCard({ theme }: { theme: 'dark' | 'light' }) {
         <div className="flex-1 space-y-1">
           <div className="flex justify-between text-xs">
             <span style={{ color: themeColors.textSecondary }}>Balance</span>
-            <span className="font-mono font-bold" style={{ color: themeColors.text }}>${portfolio.totalBalance.toLocaleString()}</span>
+            <span className="font-mono font-bold" style={{ color: themeColors.text }} suppressHydrationWarning>
+              ${formatNumber(portfolio.totalBalance)}
+            </span>
           </div>
           <div className="flex justify-between text-xs">
             <span style={{ color: themeColors.textSecondary }}>Equity</span>
-            <span className="font-mono font-bold" style={{ color: themeColors.accent.buy }}>${portfolio.equity.toLocaleString()}</span>
+            <span className="font-mono font-bold" style={{ color: themeColors.accent.buy }} suppressHydrationWarning>
+              ${formatNumber(portfolio.equity)}
+            </span>
           </div>
           <div className="flex justify-between text-xs">
             <span style={{ color: themeColors.textSecondary }}>P&L</span>
-            <span className="font-mono font-bold" style={{ color: portfolio.unrealizedPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }}>
+            <span className="font-mono font-bold" style={{ color: portfolio.unrealizedPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }} suppressHydrationWarning>
               ${portfolio.unrealizedPnl.toFixed(2)}
             </span>
           </div>
           <div className="flex justify-between text-xs">
             <span style={{ color: themeColors.textSecondary }}>Daily</span>
-            <span className="font-mono font-bold" style={{ color: portfolio.dailyPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }}>
+            <span className="font-mono font-bold" style={{ color: portfolio.dailyPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }} suppressHydrationWarning>
               {portfolio.dailyPnl >= 0 ? '+' : ''}${portfolio.dailyPnl.toFixed(2)}
             </span>
           </div>
@@ -392,7 +401,7 @@ function RiskMetricsCard({ theme }: { theme: 'dark' | 'light' }) {
   const themeColors = colors[theme];
 
   const metrics = [
-    { label: 'VaR (95%)', value: `$${riskMetrics.valueAtRisk.toLocaleString()}`, color: themeColors.accent.sell },
+    { label: 'VaR (95%)', value: `$${formatNumber(riskMetrics.valueAtRisk)}`, color: themeColors.accent.sell },
     { label: 'Sharpe', value: riskMetrics.sharpeRatio.toFixed(2), color: themeColors.accent.buy },
     { label: 'Max DD', value: `${riskMetrics.maxDrawdown}%`, color: themeColors.accent.orange },
     { label: 'Win Rate', value: `${riskMetrics.winRate}%`, color: themeColors.accent.cyan },
@@ -408,7 +417,7 @@ function RiskMetricsCard({ theme }: { theme: 'dark' | 'light' }) {
         {metrics.map((metric) => (
           <div key={metric.label} className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border }}>
             <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>{metric.label}</div>
-            <div className="font-mono text-sm font-bold" style={{ color: metric.color }}>{metric.value}</div>
+            <div className="font-mono text-sm font-bold" style={{ color: metric.color }} suppressHydrationWarning>{metric.value}</div>
           </div>
         ))}
       </div>
