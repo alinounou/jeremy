@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DEFAULT_SYMBOLS } from '@/types/trading';
+import { FOREX_PAIRS, CRYPTO_ASSETS, STOCKS, INDICES } from '@/types/trading';
 
 const FINANCE_API_BASE = 'https://internal-api.z.ai/external/finance/v1';
 const API_HEADERS = {
   'X-Z-AI-From': 'Z',
   'Content-Type': 'application/json',
 };
+
+// Local symbols database
+const LOCAL_SYMBOLS = [
+  ...FOREX_PAIRS.map(p => ({ symbol: p.symbol, name: p.name, type: p.symbol.includes('XAU') || p.symbol.includes('XAG') ? 'metal' : 'forex', exchange: 'FX' })),
+  ...CRYPTO_ASSETS.map(c => ({ symbol: c.symbol, name: c.name, type: 'crypto', exchange: 'Crypto' })),
+  ...STOCKS.map(s => ({ symbol: s.symbol, name: s.name, type: 'stock', exchange: 'NASDAQ' })),
+  ...INDICES.map(i => ({ symbol: i.symbol, name: i.name, type: 'index', exchange: 'US' })),
+];
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -34,7 +42,7 @@ export async function GET(request: NextRequest) {
 }
 
 function searchLocal(query: string, type?: string | null) {
-  let results = DEFAULT_SYMBOLS;
+  let results = [...LOCAL_SYMBOLS];
   
   if (type) {
     results = results.filter(s => s.type === type);

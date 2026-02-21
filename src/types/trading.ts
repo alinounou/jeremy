@@ -270,3 +270,11 @@ export const INDICES = [
   { symbol: '^RUT', name: 'Russell 2000' },
   { symbol: '^VIX', name: 'VIX' },
 ];
+
+// Default symbols for the platform
+export const DEFAULT_SYMBOLS = [
+  ...FOREX_PAIRS.map(p => ({ symbol: p.symbol, name: p.name, type: p.symbol.includes('XAU') || p.symbol.includes('XAG') ? 'metal' : 'forex', exchange: 'FX' })),
+  ...CRYPTO_ASSETS.map(c => ({ symbol: c.symbol, name: c.name, type: 'crypto', exchange: 'Crypto' })),
+  ...STOCKS.map(s => ({ symbol: s.symbol, name: s.name, type: 'stock', exchange: 'NASDAQ' })),
+  ...INDICES.map(i => ({ symbol: i.symbol, name: i.name, type: 'index', exchange: 'US' })),
+] as const;

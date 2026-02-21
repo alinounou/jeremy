@@ -54,3 +54,6 @@ download/
 
 # Agent context
 agent-ctx/
+
+# User uploads
+upload/

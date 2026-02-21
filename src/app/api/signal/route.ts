@@ -1,35 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSignal } from '@/lib/ai-engine';
-import { DEFAULT_SYMBOLS } from '@/types/trading';
+import { Candle } from '@/types/trading';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const ticker = searchParams.get('ticker');
-  const type = searchParams.get('type') || 'STOCKS';
+  const timeframe = searchParams.get('timeframe') || '1h';
 
   if (!ticker) {
-    // Return signals for all default symbols
-    const signals = [];
-    for (const symbol of DEFAULT_SYMBOLS.slice(0, 10)) {
-      const candles = generateMockCandles(symbol.symbol);
-      const currentPrice = candles[candles.length - 1].close;
-      const signal = generateSignal(symbol.symbol, candles, currentPrice);
-      if (signal) signals.push(signal);
-    }
-    return NextResponse.json({ signals });
+    return NextResponse.json({ error: 'Ticker is required' }, { status: 400 });
   }
 
   // Generate mock candles for the ticker
   const candles = generateMockCandles(ticker);
-  const currentPrice = candles[candles.length - 1].close;
-  const signal = generateSignal(ticker, candles, currentPrice);
+  const signal = generateSignal(ticker, candles, timeframe);
 
   return NextResponse.json({ signal });
 }
 
-function generateMockCandles(ticker: string) {
+function generateMockCandles(ticker: string): Candle[] {
   const basePrice = getBasePrice(ticker);
-  const candles = [];
+  const candles: Candle[] = [];
   const now = Date.now();
   
   let price = basePrice;
@@ -51,7 +42,7 @@ function generateMockCandles(ticker: string) {
     const low = Math.min(open, close) - Math.random() * highLowRange * 0.5;
     
     candles.push({
-      time: Math.floor(time / 1000),
+      time,
       open,
       high,
       low,
