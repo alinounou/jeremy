@@ -1,652 +1,540 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  TrendingUp, TrendingDown, Activity, Brain, Zap, Target, Shield,
-  RefreshCw, Sun, Moon, Calculator, AlertTriangle, BarChart3
+  TrendingUp, Shield, Zap, Users, Award, ChevronRight, Check, 
+  Play, Star, Clock, DollarSign, Target, BarChart3, Globe,
+  Menu, X, ArrowRight, ChevronDown, Quote, Sparkles
 } from 'lucide-react';
-import { 
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ComposedChart, Line, PieChart as RechartsPie, Pie, Cell
-} from 'recharts';
-import { useMarketData, useHistoricalData, useAISignal, useTheme, usePortfolio, useRiskMetrics } from '@/hooks/use-market-data';
-import { calculatePositionSize, calculateKellyCriterion, calculateVaR, calculateMonteCarlo } from '@/lib/quant';
-
-// Theme colors
-const colors = {
-  dark: {
-    bg: '#0a0a0f',
-    card: '#12121a',
-    border: '#1f1f2e',
-    text: '#ffffff',
-    textSecondary: '#8b8b9e',
-    accent: {
-      buy: '#00d26a',
-      sell: '#ff3b5c',
-      blue: '#3b82f6',
-      purple: '#a855f7',
-      orange: '#f59e0b',
-      cyan: '#06b6d4',
-    },
-  },
-  light: {
-    bg: '#f8fafc',
-    card: '#ffffff',
-    border: '#e2e8f0',
-    text: '#0f172a',
-    textSecondary: '#64748b',
-    accent: {
-      buy: '#22c55e',
-      sell: '#ef4444',
-      blue: '#3b82f6',
-      purple: '#a855f7',
-      orange: '#f59e0b',
-      cyan: '#06b6d4',
-    },
-  },
-};
 
 // ==================== MAIN COMPONENT ====================
-export default function TradingPlatform() {
-  const { theme, toggleTheme } = useTheme();
-  const themeColors = colors[theme];
-  const { tickers, getTickersByType } = useMarketData();
-  const [selectedSymbol, setSelectedSymbol] = useState('EURUSD');
-  const [currentTime, setCurrentTime] = useState('');
+export default function FXIFYFutures() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleString('en-US', { 
-        weekday: 'short', month: 'short', day: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      }));
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
     };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const forexTickers = useMemo(() => getTickersByType('forex'), [getTickersByType]);
-  const cryptoTickers = useMemo(() => getTickersByType('crypto'), [getTickersByType]);
-  const stockTickers = useMemo(() => getTickersByType('stock'), [getTickersByType]);
-  const metalTickers = useMemo(() => getTickersByType('metal'), [getTickersByType]);
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: themeColors.bg }}>
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b" style={{ backgroundColor: themeColors.card, borderColor: themeColors.border }}>
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ 
-              background: `linear-gradient(135deg, ${themeColors.accent.blue}, ${themeColors.accent.purple})` 
-            }}>
-              <Zap size={22} className="text-white" />
-            </div>
-            <div>
-              <span className="font-bold text-lg" style={{ color: themeColors.text }}>ELITE AI TRADING</span>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium" style={{ 
-                  backgroundColor: 'rgba(0, 210, 106, 0.15)',
-                  color: themeColors.accent.buy
-                }}>
-                  <Activity size={10} />
-                  <span>LIVE</span>
-                </div>
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
+      {/* Navigation */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0a0a0f]/95 backdrop-blur-lg border-b border-white/10' : ''}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                FXIFY Futures
+              </span>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-sm hidden md:block" style={{ color: themeColors.textSecondary }}>
-              {currentTime || '--:--:--'}
+
+            {/* Desktop Menu */}
+            <div className="hidden lg:flex items-center gap-8">
+              {['Home', 'Programs', 'About', 'FAQ', 'Contact'].map((item) => (
+                <a key={item} href={`#${item.toLowerCase()}`} className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+                  {item}
+                </a>
+              ))}
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border, color: themeColors.text }}>
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+
+            {/* CTA Buttons */}
+            <div className="hidden lg:flex items-center gap-4">
+              <button className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                Login
+              </button>
+              <button className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+                Get Funded
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="lg:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
-      </header>
 
-      {/* Main Content - All Cards Stacked */}
-      <main className="p-4 space-y-4 max-w-7xl mx-auto">
-        
-        {/* Row 1: Market Watch Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <MarketCard title="FOREX" tickers={forexTickers.slice(0, 4)} theme={theme} selectedSymbol={selectedSymbol} onSelect={setSelectedSymbol} icon={<BarChart3 size={14} />} />
-          <MarketCard title="CRYPTO" tickers={cryptoTickers.slice(0, 4)} theme={theme} selectedSymbol={selectedSymbol} onSelect={setSelectedSymbol} icon={<Activity size={14} />} />
-          <MarketCard title="STOCKS" tickers={stockTickers.slice(0, 4)} theme={theme} selectedSymbol={selectedSymbol} onSelect={setSelectedSymbol} icon={<TrendingUp size={14} />} />
-          <MarketCard title="METALS" tickers={metalTickers.slice(0, 4)} theme={theme} selectedSymbol={selectedSymbol} onSelect={setSelectedSymbol} icon={<Target size={14} />} />
-        </div>
-
-        {/* Row 2: Chart + AI Signal */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            <ChartCard theme={theme} symbol={selectedSymbol} />
-          </div>
-          <AISignalCard theme={theme} symbol={selectedSymbol} />
-        </div>
-
-        {/* Row 3: Portfolio + Risk Metrics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <PortfolioCard theme={theme} />
-          <RiskMetricsCard theme={theme} />
-        </div>
-
-        {/* Row 4: All Calculators */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <PositionCalculatorCard theme={theme} />
-          <KellyCalculatorCard theme={theme} />
-          <VarCalculatorCard theme={theme} />
-          <MonteCarloCalculatorCard theme={theme} />
-        </div>
-
-      </main>
-    </div>
-  );
-}
-
-// ==================== MARKET CARD ====================
-function MarketCard({ title, tickers, theme, selectedSymbol, onSelect, icon }: { 
-  title: string; 
-  tickers: ReturnType<typeof useMarketData>['tickers']; 
-  theme: 'dark' | 'light';
-  selectedSymbol: string;
-  onSelect: (symbol: string) => void;
-  icon: React.ReactNode;
-}) {
-  const themeColors = colors[theme];
-
-  const formatPrice = (price: number, symbol: string) => {
-    if (symbol.includes('JPY')) return price.toFixed(2);
-    if (symbol.includes('BTC')) return price.toFixed(0);
-    if (price >= 1000) return price.toFixed(2);
-    return price.toFixed(5);
-  };
-
-  return (
-    <div className="rounded-xl p-3" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <div className="flex items-center gap-2 mb-2">
-        <span style={{ color: themeColors.accent.blue }}>{icon}</span>
-        <span className="text-xs font-bold" style={{ color: themeColors.text }}>{title}</span>
-      </div>
-      <div className="space-y-1">
-        {tickers.map((ticker) => (
-          <div key={ticker.symbol} onClick={() => onSelect(ticker.symbol)}
-            className="flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all"
-            style={{ backgroundColor: selectedSymbol === ticker.symbol ? themeColors.border : 'transparent' }}>
-            <div className="flex-1 min-w-0">
-              <div className="font-semibold text-xs truncate" style={{ color: themeColors.text }}>{ticker.name}</div>
-            </div>
-            <div className="text-right shrink-0 ml-2">
-              <div className="font-mono text-xs font-bold" style={{ color: themeColors.text }} suppressHydrationWarning>
-                {formatPrice(ticker.price, ticker.symbol)}
-              </div>
-              <div className="flex items-center justify-end gap-1">
-                {ticker.changePercent >= 0 ? 
-                  <TrendingUp size={10} style={{ color: themeColors.accent.buy }} /> :
-                  <TrendingDown size={10} style={{ color: themeColors.accent.sell }} />
-                }
-                <span className="text-[10px] font-mono font-medium" style={{
-                  color: ticker.changePercent >= 0 ? themeColors.accent.buy : themeColors.accent.sell,
-                }}>
-                  {ticker.changePercent >= 0 ? '+' : ''}{ticker.changePercent.toFixed(2)}%
-                </span>
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-[#12121a] border-t border-white/10">
+            <div className="px-4 py-4 space-y-3">
+              {['Home', 'Programs', 'About', 'FAQ', 'Contact'].map((item) => (
+                <a key={item} href={`#${item.toLowerCase()}`} className="block py-2 text-gray-300 hover:text-white">
+                  {item}
+                </a>
+              ))}
+              <div className="pt-4 space-y-3">
+                <button className="w-full py-2.5 text-gray-300 border border-white/20 rounded-lg">Login</button>
+                <button className="w-full py-2.5 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg font-semibold">Get Funded</button>
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ==================== CHART CARD ====================
-function ChartCard({ theme, symbol }: { theme: 'dark' | 'light'; symbol: string }) {
-  const { candles, isLoading } = useHistoricalData(symbol, '1h', 50);
-  const themeColors = colors[theme];
-  const { tickers } = useMarketData();
-  
-  const currentTicker = tickers.find(t => t.symbol === symbol);
-  const priceChange = currentTicker?.changePercent || 0;
-
-  const chartData = useMemo(() => {
-    if (candles.length === 0) return [];
-    return candles.map((candle) => ({
-      time: new Date(candle.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-      close: candle.close,
-    }));
-  }, [candles]);
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-bold text-lg" style={{ color: themeColors.text }}>{symbol}</h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-mono font-bold" style={{ color: themeColors.text }} suppressHydrationWarning>
-              {currentTicker?.price?.toFixed(symbol.includes('JPY') ? 2 : 5) || '0.00000'}
-            </span>
-            <span className="text-xs px-2 py-0.5 rounded font-medium" style={{ 
-              backgroundColor: priceChange >= 0 ? 'rgba(0, 210, 106, 0.15)' : 'rgba(255, 59, 92, 0.15)',
-              color: priceChange >= 0 ? themeColors.accent.buy : themeColors.accent.sell,
-            }}>
-              {priceChange >= 0 ? '+' : ''}{priceChange.toFixed(2)}%
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="h-40">
-        {isLoading ? (
-          <div className="h-full flex items-center justify-center">
-            <RefreshCw className="animate-spin" size={24} style={{ color: themeColors.accent.blue }} />
-          </div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData}>
-              <defs>
-                <linearGradient id={`gradient-${theme}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={themeColors.accent.blue} stopOpacity={0.4}/>
-                  <stop offset="95%" stopColor={themeColors.accent.blue} stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke={themeColors.border} opacity={0.5} />
-              <XAxis dataKey="time" stroke={themeColors.textSecondary} fontSize={9} tickLine={false} />
-              <YAxis stroke={themeColors.textSecondary} fontSize={9} tickLine={false} domain={['auto', 'auto']} orientation="right" width={50} />
-              <Tooltip contentStyle={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}`, borderRadius: '8px', color: themeColors.text }} />
-              <Area type="monotone" dataKey="close" stroke={themeColors.accent.blue} fill={`url(#gradient-${theme})`} strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
         )}
-      </div>
-    </div>
-  );
-}
+      </nav>
 
-// ==================== AI SIGNAL CARD ====================
-function AISignalCard({ theme, symbol }: { theme: 'dark' | 'light'; symbol: string }) {
-  const { analysis, isLoading } = useAISignal(symbol);
-  const themeColors = colors[theme];
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[128px]" />
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PC9nPjwvc3ZnPg==')] opacity-50" />
 
-  if (isLoading || !analysis) {
-    return (
-      <div className="rounded-xl p-4 h-full flex items-center justify-center" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-        <Brain className="animate-pulse" size={32} style={{ color: themeColors.accent.purple }} />
-      </div>
-    );
-  }
-
-  const signal = analysis.signal;
-  const signalColor = signal.type === 'BUY' ? themeColors.accent.buy :
-                      signal.type === 'SELL' ? themeColors.accent.sell :
-                      themeColors.accent.orange;
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: themeColors.text }}>
-          <Brain size={14} style={{ color: themeColors.accent.purple }} />
-          AI SIGNAL
-        </h3>
-        <div className="flex items-center gap-1 px-2 py-0.5 rounded text-xs" style={{ backgroundColor: themeColors.border, color: themeColors.accent.purple }}>
-          <Activity size={10} />
-          <span>ACTIVE</span>
-        </div>
-      </div>
-
-      <div className="text-center mb-3">
-        <div className="inline-block px-6 py-2 rounded-lg text-xl font-bold" style={{ 
-          backgroundColor: `${signalColor}20`,
-          color: signalColor,
-          boxShadow: `0 0 30px ${signalColor}40`,
-        }}>
-          {signal.type}
-        </div>
-        <div className="text-sm mt-1" style={{ color: themeColors.textSecondary }}>
-          Confidence: <span className="font-mono font-bold" style={{ color: themeColors.text }}>{signal.confidence.toFixed(0)}%</span>
-        </div>
-      </div>
-
-      <div className="h-2 rounded-full overflow-hidden mb-3" style={{ backgroundColor: themeColors.border }}>
-        <div className="h-full rounded-full" style={{ width: `${signal.probability}%`, backgroundColor: signalColor }} />
-      </div>
-
-      {signal.entry && (
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border }}>
-            <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>ENTRY</div>
-            <div className="font-mono text-xs font-bold" style={{ color: themeColors.text }}>{signal.entry.toFixed(5)}</div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <span className="text-sm text-gray-300">Trusted by 50,000+ traders worldwide</span>
           </div>
-          <div className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border }}>
-            <div className="text-[10px]" style={{ color: themeColors.accent.sell }}>SL</div>
-            <div className="font-mono text-xs font-bold" style={{ color: themeColors.accent.sell }}>{signal.stopLoss?.toFixed(5)}</div>
+
+          {/* Main Heading */}
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+            <span className="block">Trade Futures with</span>
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
+              Professional Capital
+            </span>
+          </h1>
+
+          {/* Subheading */}
+          <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto mb-10">
+            Join the most trusted futures prop firm. Get funded up to $200,000, 
+            keep up to 90% of profits, and trade without risking your own capital.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-xl font-semibold text-lg hover:opacity-90 transition-all hover:scale-105 flex items-center justify-center gap-2">
+              Start Your Journey
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/20 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+              <Play className="w-5 h-5" />
+              Watch Demo
+            </button>
           </div>
-          <div className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border }}>
-            <div className="text-[10px]" style={{ color: themeColors.accent.buy }}>TP</div>
-            <div className="font-mono text-xs font-bold" style={{ color: themeColors.accent.buy }}>{signal.takeProfit?.toFixed(5)}</div>
+
+          {/* Trust Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-8 text-gray-500">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-green-400" />
+              <span className="text-sm">Regulated Broker</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-blue-400" />
+              <span className="text-sm">50K+ Traders</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-yellow-400" />
+              <span className="text-sm">Award Winning</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-5 h-5 text-cyan-400" />
+              <span className="text-sm">150+ Countries</span>
+            </div>
           </div>
         </div>
-      )}
-    </div>
-  );
-}
 
-// Helper function to format numbers consistently
-function formatNumber(num: number): string {
-  return num.toLocaleString('en-US');
-}
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <ChevronDown className="w-6 h-6 text-gray-500" />
+        </div>
+      </section>
 
-// ==================== PORTFOLIO CARD ====================
-function PortfolioCard({ theme }: { theme: 'dark' | 'light' }) {
-  const { portfolio, positions } = usePortfolio();
-  const themeColors = colors[theme];
+      {/* Stats Section */}
+      <section className="py-16 border-y border-white/10 bg-[#12121a]/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { value: '$50M+', label: 'Capital Funded', icon: DollarSign },
+              { value: '50,000+', label: 'Active Traders', icon: Users },
+              { value: '90%', label: 'Profit Split', icon: TrendingUp },
+              { value: '4.9/5', label: 'Trustpilot Rating', icon: Star },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 mb-4">
+                  <stat.icon className="w-6 h-6 text-cyan-400" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <div className="text-gray-500 text-sm">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  const pieData = [
-    { name: 'Equity', value: portfolio.equity, color: themeColors.accent.buy },
-    { name: 'Margin', value: portfolio.margin, color: themeColors.accent.sell },
-    { name: 'Free', value: portfolio.freeMargin, color: themeColors.accent.blue },
-  ];
+      {/* Programs Section */}
+      <section id="programs" className="py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
+              <Target className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-blue-400">Funding Programs</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+              Choose Your Path to
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"> Success</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+              Select the funding program that matches your trading style. Start small and scale up as you prove your skills.
+            </p>
+          </div>
 
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <Target size={14} style={{ color: themeColors.accent.cyan }} />
-        PORTFOLIO
-      </h3>
-      <div className="flex items-center gap-4">
-        <div className="h-24 w-24">
-          <ResponsiveContainer width="100%" height="100%">
-            <RechartsPie>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={25} outerRadius={40} dataKey="value">
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {[
+              {
+                name: 'Starter',
+                price: '$99',
+                capital: '$10,000',
+                profitSplit: '80%',
+                features: ['1-Step Evaluation', 'Unlimited Trading Days', 'News Trading Allowed', 'Weekend Holding', 'Max Drawdown: 10%', 'Profit Target: 8%'],
+                popular: false,
+              },
+              {
+                name: 'Professional',
+                price: '$299',
+                capital: '$50,000',
+                profitSplit: '85%',
+                features: ['1-Step Evaluation', 'Unlimited Trading Days', 'News Trading Allowed', 'Weekend Holding', 'Max Drawdown: 10%', 'Profit Target: 8%'],
+                popular: true,
+              },
+              {
+                name: 'Elite',
+                price: '$599',
+                capital: '$200,000',
+                profitSplit: '90%',
+                features: ['Direct Funding Option', 'Unlimited Trading Days', 'News Trading Allowed', 'Weekend Holding', 'Max Drawdown: 10%', 'Profit Target: 8%'],
+                popular: false,
+              },
+            ].map((plan) => (
+              <div 
+                key={plan.name} 
+                className={`relative rounded-2xl p-6 lg:p-8 transition-all hover:scale-105 ${
+                  plan.popular 
+                    ? 'bg-gradient-to-b from-blue-500/20 to-cyan-500/10 border-2 border-blue-500/50' 
+                    : 'bg-[#12121a] border border-white/10'
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full text-xs font-semibold">
+                    Most Popular
+                  </div>
+                )}
+                
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                  <div className="text-4xl font-bold mb-1">{plan.price}</div>
+                  <div className="text-gray-500 text-sm">one-time fee</div>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-4 mb-6 text-center">
+                  <div className="text-gray-400 text-sm mb-1">Trading Capital</div>
+                  <div className="text-2xl font-bold text-cyan-400">{plan.capital}</div>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-4 mb-6 text-center">
+                  <div className="text-gray-400 text-sm mb-1">Profit Split</div>
+                  <div className="text-2xl font-bold text-green-400">{plan.profitSplit}</div>
+                </div>
+
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3 text-sm text-gray-300">
+                      <Check className="w-4 h-4 text-green-400 shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <button className={`w-full py-3 rounded-xl font-semibold transition-all ${
+                  plan.popular 
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-400 hover:opacity-90' 
+                    : 'bg-white/10 hover:bg-white/20'
+                }`}>
+                  Get Started
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-gradient-to-b from-[#12121a]/50 to-transparent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
+              <Zap className="w-4 h-4 text-cyan-400" />
+              <span className="text-sm text-cyan-400">Simple Process</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+              How It <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Works</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+              Get funded in three simple steps. No hidden fees, no complicated rules.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { step: '01', title: 'Choose Your Plan', description: 'Select the funding amount that matches your trading goals. Start from $10,000 up to $200,000.', icon: Target },
+              { step: '02', title: 'Pass the Evaluation', description: 'Trade during the evaluation period following simple rules. Show consistent profitability.', icon: BarChart3 },
+              { step: '03', title: 'Get Funded', description: 'Once you pass, receive your funded account and start earning real profits with our capital.', icon: DollarSign },
+            ].map((item, index) => (
+              <div key={item.step} className="relative">
+                {index < 2 && (
+                  <div className="hidden md:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent" />
+                )}
+                <div className="bg-[#12121a] rounded-2xl p-8 border border-white/10 hover:border-blue-500/50 transition-colors">
+                  <div className="text-5xl font-bold bg-gradient-to-r from-blue-500/30 to-cyan-500/30 bg-clip-text text-transparent mb-4">
+                    {item.step}
+                  </div>
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-6">
+                    <item.icon className="w-7 h-7 text-cyan-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+                  <p className="text-gray-400">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
+              <Shield className="w-4 h-4 text-green-400" />
+              <span className="text-sm text-green-400">Why Choose Us</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+              Built for <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Traders</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+              Everything you need to succeed as a funded futures trader.
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Clock, title: 'Unlimited Time', description: 'No time limits on evaluations. Trade at your own pace without pressure.' },
+              { icon: TrendingUp, title: 'Scale Your Account', description: 'Grow your account up to $2M with consistent performance. More profit for you.' },
+              { icon: Shield, title: 'Risk Management', description: 'Built-in risk controls to protect your account. Trade with confidence.' },
+              { icon: Zap, title: 'Instant Payouts', description: 'Request payouts anytime. Receive your profits within 24 hours.' },
+              { icon: BarChart3, title: 'Real-Time Stats', description: 'Track your performance with our advanced analytics dashboard.' },
+              { icon: Globe, title: 'Trade Anywhere', description: 'Access your account from any device. Trade on the go.' },
+            ].map((feature) => (
+              <div key={feature.title} className="bg-[#12121a] rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 transition-all hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+                  <feature.icon className="w-6 h-6 text-cyan-400" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-400 text-sm">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-gradient-to-b from-[#12121a]/50 to-transparent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 mb-6">
+              <Star className="w-4 h-4 text-yellow-400" />
+              <span className="text-sm text-yellow-400">Testimonials</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+              What Our <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Traders</span> Say
+            </h2>
+          </div>
+
+          {/* Testimonials Grid */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { name: 'Michael Chen', role: 'Funded Trader - $100K', content: 'Best prop firm I\'ve worked with. The evaluation process is fair, and payouts are always on time. Highly recommend!', rating: 5 },
+              { name: 'Sarah Williams', role: 'Funded Trader - $50K', content: 'Transparent rules, great support team, and the scaling plan is amazing. I\'ve grown my account significantly.', rating: 5 },
+              { name: 'James Rodriguez', role: 'Funded Trader - $200K', content: 'Finally a prop firm that understands traders. No hidden rules, no tricks. Just pure trading.', rating: 5 },
+            ].map((testimonial) => (
+              <div key={testimonial.name} className="bg-[#12121a] rounded-2xl p-6 border border-white/10">
+                <Quote className="w-8 h-8 text-blue-500/30 mb-4" />
+                <p className="text-gray-300 mb-6">{testimonial.content}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center font-semibold">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-sm text-gray-500">{testimonial.role}</div>
+                  </div>
+                </div>
+                <div className="flex gap-1 mt-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
+              <ChevronRight className="w-4 h-4 text-purple-400" />
+              <span className="text-sm text-purple-400">FAQ</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-bold mb-6">
+              Frequently Asked <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Questions</span>
+            </h2>
+          </div>
+
+          {/* FAQ Items */}
+          <div className="space-y-4">
+            {[
+              { q: 'What is a prop firm?', a: 'A prop firm (proprietary trading firm) provides traders with capital to trade. You keep a percentage of the profits you make while trading with our funds.' },
+              { q: 'How long do I have to pass the evaluation?', a: 'There is no time limit! You can take as long as you need to pass the evaluation phase. Trade at your own pace without pressure.' },
+              { q: 'What happens if I fail the evaluation?', a: 'You can restart the evaluation with a new account. We offer discounted restart fees for traders who want to try again.' },
+              { q: 'How do payouts work?', a: 'Once funded, you can request payouts anytime. Profits are sent within 24 hours to your preferred payment method.' },
+              { q: 'What markets can I trade?', a: 'You can trade all major futures markets including indices, commodities, currencies, and interest rates on regulated exchanges.' },
+              { q: 'Is there a maximum profit target?', a: 'No! There is no cap on how much you can earn. The more you profit, the more you keep (up to 90% profit split).' },
+            ].map((faq, index) => (
+              <div 
+                key={index}
+                className="bg-[#12121a] rounded-xl border border-white/10 overflow-hidden"
+              >
+                <button
+                  className="w-full flex items-center justify-between p-6 text-left"
+                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                >
+                  <span className="font-semibold pr-4">{faq.q}</span>
+                  <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} />
+                </button>
+                {activeFaq === index && (
+                  <div className="px-6 pb-6 text-gray-400">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-3xl overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-500" />
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L2c+PC9zdmc+')] opacity-50" />
+            
+            <div className="relative z-10 text-center py-16 px-8">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Ready to Start Trading?
+              </h2>
+              <p className="text-white/80 max-w-xl mx-auto mb-8">
+                Join thousands of funded traders and start your journey today. No hidden fees, no tricks.
+              </p>
+              <button className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition-all hover:scale-105">
+                Get Funded Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-16 border-t border-white/10 bg-[#0a0a0f]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xl font-bold">FXIFY Futures</span>
+              </div>
+              <p className="text-gray-500 text-sm mb-6">
+                The most trusted futures prop firm for traders worldwide.
+              </p>
+              <div className="flex gap-4">
+                {['twitter', 'linkedin', 'youtube', 'instagram'].map((social) => (
+                  <div key={social} className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center cursor-pointer transition-colors">
+                    <Globe className="w-5 h-5 text-gray-400" />
+                  </div>
                 ))}
-              </Pie>
-            </RechartsPie>
-          </ResponsiveContainer>
-        </div>
-        <div className="flex-1 space-y-1">
-          <div className="flex justify-between text-xs">
-            <span style={{ color: themeColors.textSecondary }}>Balance</span>
-            <span className="font-mono font-bold" style={{ color: themeColors.text }} suppressHydrationWarning>
-              ${formatNumber(portfolio.totalBalance)}
-            </span>
+              </div>
+            </div>
+
+            {/* Links */}
+            <div>
+              <h4 className="font-semibold mb-4">Programs</h4>
+              <ul className="space-y-3 text-gray-500 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">Starter Program</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Professional Program</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Elite Program</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Scaling Plan</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-3 text-gray-500 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-3 text-gray-500 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Risk Disclosure</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Refund Policy</a></li>
+              </ul>
+            </div>
           </div>
-          <div className="flex justify-between text-xs">
-            <span style={{ color: themeColors.textSecondary }}>Equity</span>
-            <span className="font-mono font-bold" style={{ color: themeColors.accent.buy }} suppressHydrationWarning>
-              ${formatNumber(portfolio.equity)}
-            </span>
-          </div>
-          <div className="flex justify-between text-xs">
-            <span style={{ color: themeColors.textSecondary }}>P&L</span>
-            <span className="font-mono font-bold" style={{ color: portfolio.unrealizedPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }} suppressHydrationWarning>
-              ${portfolio.unrealizedPnl.toFixed(2)}
-            </span>
-          </div>
-          <div className="flex justify-between text-xs">
-            <span style={{ color: themeColors.textSecondary }}>Daily</span>
-            <span className="font-mono font-bold" style={{ color: portfolio.dailyPnl >= 0 ? themeColors.accent.buy : themeColors.accent.sell }} suppressHydrationWarning>
-              {portfolio.dailyPnl >= 0 ? '+' : ''}${portfolio.dailyPnl.toFixed(2)}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-// ==================== RISK METRICS CARD ====================
-function RiskMetricsCard({ theme }: { theme: 'dark' | 'light' }) {
-  const riskMetrics = useRiskMetrics();
-  const themeColors = colors[theme];
-
-  const metrics = [
-    { label: 'VaR (95%)', value: `$${formatNumber(riskMetrics.valueAtRisk)}`, color: themeColors.accent.sell },
-    { label: 'Sharpe', value: riskMetrics.sharpeRatio.toFixed(2), color: themeColors.accent.buy },
-    { label: 'Max DD', value: `${riskMetrics.maxDrawdown}%`, color: themeColors.accent.orange },
-    { label: 'Win Rate', value: `${riskMetrics.winRate}%`, color: themeColors.accent.cyan },
-  ];
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <Shield size={14} style={{ color: themeColors.accent.orange }} />
-        RISK METRICS
-      </h3>
-      <div className="grid grid-cols-2 gap-2">
-        {metrics.map((metric) => (
-          <div key={metric.label} className="p-2 rounded-lg" style={{ backgroundColor: themeColors.border }}>
-            <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>{metric.label}</div>
-            <div className="font-mono text-sm font-bold" style={{ color: metric.color }} suppressHydrationWarning>{metric.value}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ==================== POSITION CALCULATOR CARD ====================
-function PositionCalculatorCard({ theme }: { theme: 'dark' | 'light' }) {
-  const themeColors = colors[theme];
-  const [inputs, setInputs] = useState({ balance: 10000, riskPercent: 2, entry: 1.0850, stopLoss: 1.0800 });
-
-  const result = calculatePositionSize({
-    accountBalance: inputs.balance,
-    riskPercent: inputs.riskPercent,
-    entryPrice: inputs.entry,
-    stopLoss: inputs.stopLoss,
-    instrumentType: 'forex',
-  });
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <Calculator size={14} style={{ color: themeColors.accent.purple }} />
-        POSITION SIZE
-      </h3>
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Balance ($)</label>
-          <input type="number" value={inputs.balance}
-            onChange={(e) => setInputs({ ...inputs, balance: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Risk (%)</label>
-          <input type="number" value={inputs.riskPercent}
-            onChange={(e) => setInputs({ ...inputs, riskPercent: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Entry</label>
-          <input type="number" step="0.00001" value={inputs.entry}
-            onChange={(e) => setInputs({ ...inputs, entry: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Stop Loss</label>
-          <input type="number" step="0.00001" value={inputs.stopLoss}
-            onChange={(e) => setInputs({ ...inputs, stopLoss: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>Lots</div>
-          <div className="font-mono text-lg font-bold" style={{ color: themeColors.accent.blue }}>{result.lots.toFixed(2)}</div>
-        </div>
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>Risk Amount</div>
-          <div className="font-mono text-lg font-bold" style={{ color: themeColors.accent.sell }}>${result.riskAmount.toFixed(2)}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ==================== KELLY CALCULATOR CARD ====================
-function KellyCalculatorCard({ theme }: { theme: 'dark' | 'light' }) {
-  const themeColors = colors[theme];
-  const [inputs, setInputs] = useState({ winProbability: 55, winLossRatio: 1.5 });
-
-  const result = calculateKellyCriterion({
-    winProbability: inputs.winProbability / 100,
-    winLossRatio: inputs.winLossRatio,
-  });
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <Calculator size={14} style={{ color: themeColors.accent.cyan }} />
-        KELLY CRITERION
-      </h3>
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Win Rate (%)</label>
-          <input type="number" value={inputs.winProbability}
-            onChange={(e) => setInputs({ ...inputs, winProbability: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>W/L Ratio</label>
-          <input type="number" step="0.1" value={inputs.winLossRatio}
-            onChange={(e) => setInputs({ ...inputs, winLossRatio: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-sm font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-      </div>
-      <div className="p-3 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-        <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>Kelly %</div>
-        <div className="font-mono text-2xl font-bold" style={{ color: result > 0 ? themeColors.accent.buy : themeColors.accent.sell }}>
-          {(result * 100).toFixed(1)}%
-        </div>
-        <div className="text-xs mt-1" style={{ color: themeColors.textSecondary }}>
-          Half Kelly: <span className="font-mono font-bold" style={{ color: themeColors.accent.cyan }}>{(result * 50).toFixed(1)}%</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ==================== VAR CALCULATOR CARD ====================
-function VarCalculatorCard({ theme }: { theme: 'dark' | 'light' }) {
-  const themeColors = colors[theme];
-  const [inputs, setInputs] = useState({ portfolioValue: 100000, confidence: 95, volatility: 15 });
-
-  const result = calculateVaR({
-    portfolioValue: inputs.portfolioValue,
-    confidenceLevel: inputs.confidence / 100,
-    timeHorizon: 1,
-    volatility: inputs.volatility / 100,
-  });
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <Shield size={14} style={{ color: themeColors.accent.sell }} />
-        VALUE AT RISK
-      </h3>
-      <div className="grid grid-cols-3 gap-2 mb-3">
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Portfolio ($)</label>
-          <input type="number" value={inputs.portfolioValue}
-            onChange={(e) => setInputs({ ...inputs, portfolioValue: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Conf. (%)</label>
-          <input type="number" value={inputs.confidence}
-            onChange={(e) => setInputs({ ...inputs, confidence: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Vol. (%)</label>
-          <input type="number" value={inputs.volatility}
-            onChange={(e) => setInputs({ ...inputs, volatility: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>VaR</div>
-          <div className="font-mono text-lg font-bold" style={{ color: themeColors.accent.sell }}>-${result.varParametric.toFixed(0)}</div>
-        </div>
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>CVaR</div>
-          <div className="font-mono text-lg font-bold" style={{ color: themeColors.accent.orange }}>-${result.expectedShortfall.toFixed(0)}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ==================== MONTE CARLO CALCULATOR CARD ====================
-function MonteCarloCalculatorCard({ theme }: { theme: 'dark' | 'light' }) {
-  const themeColors = colors[theme];
-  const [inputs, setInputs] = useState({ capital: 10000, expectedReturn: 12, volatility: 20 });
-
-  const result = useMemo(() => calculateMonteCarlo({
-    initialCapital: inputs.capital,
-    expectedReturn: inputs.expectedReturn / 100,
-    volatility: inputs.volatility / 100,
-    timeHorizon: 252,
-    simulations: 500,
-    trades: 252,
-  }), [inputs]);
-
-  // Calculate expected gain/loss
-  const expectedGain = result.expectedValue - inputs.capital;
-  const expectedGainPercent = (expectedGain / inputs.capital) * 100;
-
-  return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: themeColors.card, border: `1px solid ${themeColors.border}` }}>
-      <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color: themeColors.text }}>
-        <RefreshCw size={14} style={{ color: themeColors.accent.purple }} />
-        MONTE CARLO
-      </h3>
-      <div className="grid grid-cols-3 gap-2 mb-3">
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Capital ($)</label>
-          <input type="number" value={inputs.capital}
-            onChange={(e) => setInputs({ ...inputs, capital: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Return (%)</label>
-          <input type="number" value={inputs.expectedReturn}
-            onChange={(e) => setInputs({ ...inputs, expectedReturn: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-        <div>
-          <label className="text-[10px] block mb-1" style={{ color: themeColors.textSecondary }}>Vol. (%)</label>
-          <input type="number" value={inputs.volatility}
-            onChange={(e) => setInputs({ ...inputs, volatility: Number(e.target.value) })}
-            className="w-full p-2 rounded-lg text-xs font-mono"
-            style={{ backgroundColor: themeColors.border, color: themeColors.text, border: 'none', outline: 'none' }} />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>Prob. Ruin</div>
-          <div className="font-mono text-lg font-bold" style={{ color: themeColors.accent.sell }}>{(result.probabilityOfRuin * 100).toFixed(1)}%</div>
-        </div>
-        <div className="p-2 rounded-lg text-center" style={{ backgroundColor: themeColors.border }}>
-          <div className="text-[10px]" style={{ color: themeColors.textSecondary }}>Expected Gain</div>
-          <div className="font-mono text-lg font-bold" style={{ color: expectedGain >= 0 ? themeColors.accent.buy : themeColors.accent.sell }}>
-            {expectedGain >= 0 ? '+' : ''}{expectedGainPercent.toFixed(1)}%
+          {/* Bottom */}
+          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-500 text-sm">
+            <p>© 2025 FXIFY Futures. All rights reserved.</p>
+            <p>Trading futures involves substantial risk of loss.</p>
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
